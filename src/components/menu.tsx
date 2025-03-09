@@ -93,8 +93,15 @@ function Menu() {
 				startIcon={
 					<Stack direction="row" spacing={1} alignItems="center">
 						<MenuRoundedIcon fontSize="medium" style={{ fill: "#ffffff" }} />
-						{/* Exibe o título correto com base na rota atual */}
-						<Box sx={{ color: "#ffffff", fontWeight: "bold" }}>{getTitle()}</Box>
+						<Box
+							sx={{
+								color: "#ffffff",
+								textTransform: "none",
+								fontFamily: "Nunito",
+							}}
+						>
+							<span className="body-medium">{getTitle()}</span>
+						</Box>
 					</Stack>
 				}
 			/>

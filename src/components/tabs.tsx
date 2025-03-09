@@ -19,8 +19,18 @@ function LabTabs(props: LabTabsProps) {
 			<TabContext value={value}>
 				<Box sx={{ borderBottom: 1, borderColor: "divider" }}>
 					<TabList onChange={handleChange} aria-label="lab API tabs example">
-						<Tab sx={{ textTransform: "none" }} label={titleOne} value="1" />
-						<Tab sx={{ textTransform: "none" }} label={titleTwo} value="2" />
+						<Tab
+							className="body-large-bold"
+							sx={{ textTransform: "none" }}
+							label={titleOne}
+							value="1"
+						/>
+						<Tab
+							className="body-large-bold"
+							sx={{ textTransform: "none" }}
+							label={titleTwo}
+							value="2"
+						/>
 					</TabList>
 				</Box>
 				<TabPanel value="1">{contentOne}</TabPanel>
