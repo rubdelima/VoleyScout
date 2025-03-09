@@ -13,3 +13,37 @@
 /* Stop purging. */
 
 /* Your own custom utilities */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+strong,
+b,
+i,
+a {
+	font-family: "Nunito", sans-serif !important;
+	font-optical-sizing: auto;
+	font-style: normal;
+}
+
+.css-rizt0-MuiTypography-root {
+	font-family: "Nunito", sans-serif !important;
+	font-optical-sizing: auto;
+	font-style: normal;
+}
+
+.css-cyzoxb-MuiButtonBase-root-MuiTab-root {
+	font-family: "Nunito", sans-serif !important;
+	font-optical-sizing: auto;
+	font-style: normal;
+}
+
+.css-w8dmq8 {
+	font-family: "Nunito", sans-serif !important;
+	font-optical-sizing: auto;
+	font-style: normal;
+}
