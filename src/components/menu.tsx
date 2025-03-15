@@ -43,9 +43,9 @@ function Menu() {
 			case 0:
 				return "/"; // Página Inicial
 			case 1:
-				return "/nova-partida"; // Nova partida
+				return "/equipes"; // Equipes
 			case 2:
-				return "/nova-analise"; // Nova análise
+				return "/meu-time"; // Meu time
 			default:
 				return "/";
 		}
@@ -56,10 +56,10 @@ function Menu() {
 		switch (location.pathname) {
 			case "/":
 				return "Página inicial";
-			case "/nova-partida":
-				return "Nova partida";
-			case "/nova-analise":
-				return "Nova análise";
+			case "/equipes":
+				return "Equipe";
+			case "/meu-time":
+				return "Meu time";
 			default:
 				return "";
 		}
@@ -73,7 +73,7 @@ function Menu() {
 			onKeyDown={toggleDrawer(false)}
 		>
 			<List>
-				{["Página inicial", "Nova partida", "Nova análise"].map((text, index) => (
+				{["Página inicial", "Equipes", "Meu time"].map((text, index) => (
 					<ListItem key={text} disablePadding>
 						<ListItemButton onClick={() => handleNavigation(getRoute(index))}>
 							<ListItemText primary={text} />

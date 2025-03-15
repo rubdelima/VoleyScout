@@ -1,6 +1,6 @@
 import Header from "../../src/components/header";
 
-function NovaPartida() {
+function MeuTime() {
 	return (
 		<div>
 			<Header />
@@ -8,4 +8,4 @@ function NovaPartida() {
 	);
 }
 
-export default NovaPartida;
+export default MeuTime;
