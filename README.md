@@ -4,10 +4,16 @@ A streamlined [Tailwind CSS v3.1](https://tailwindcss.com) template for [Create 
 
 > This template installs and sets up [Tailwind CSS](https://tailwindcss.com) with TypeScript support.
 
-## Usage
+## Usage create
 
 ```bash
 npx create-react-app --template tailwindcss-typescript
+```
+
+## Usage
+
+```bash
+npm start
 ```
 
 ## Credits
