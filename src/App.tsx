@@ -7,7 +7,7 @@ function App() {
 	return (
 		<Router>
 			<Routes>
-				<Route path="/" element={<PaginaInicial />} />
+				<Route path="/" element={<PaginaInicial sigla="BRA" pais="Brasil" />} />
 				<Route path="/equipes" element={<Equipes />} />
 				<Route path="/meu-time" element={<MeuTime />} />
 			</Routes>

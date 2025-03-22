@@ -1,7 +1,7 @@
 import IconButton from "@mui/material/IconButton";
 import profile from "../assets/profile.svg";
 
-function Profile(props: ProfileProps) {
+function Profile() {
 	return (
 		<div>
 			<IconButton>
@@ -9,10 +9,6 @@ function Profile(props: ProfileProps) {
 			</IconButton>
 		</div>
 	);
-}
-
-interface ProfileProps {
-	// itemOne: string;
 }
 
 export default Profile;
