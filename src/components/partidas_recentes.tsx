@@ -49,7 +49,7 @@ function PartidasRecentes(props: PartidasRecentesProps) {
 		<div>
 			<Subtitle title="Partidas recentes" />
 			<div className="grid grid-cols-3 gap-10">
-				<div className="bg-[#CEF2FF] p-10 gap-10 flex justify-around items-center">
+				<div className="bg-[#CEF2FF] p-10 gap-10 flex justify-around rounded-[15px]">
 					<div className="flex flex-col">
 						<p className="h3-bold text-[#00729B]">{item1.sigla_equipe}</p>
 						<p className="body-medium text-[#00729B]">{item1.equipe}</p>
@@ -60,7 +60,7 @@ function PartidasRecentes(props: PartidasRecentesProps) {
 						<p className="body-medium text-[#00729B]">{item1.adversario}</p>
 					</div>
 				</div>
-				<div className="bg-[#CEF2FF] p-10 gap-10 flex justify-around items-center">
+				<div className="bg-[#CEF2FF] p-10 gap-10 flex justify-around rounded-[15px]">
 					<div className="flex flex-col">
 						<p className="h3-bold text-[#00729B]">{item2.sigla_equipe}</p>
 						<p className="body-medium text-[#00729B]">{item2.equipe}</p>
@@ -71,7 +71,7 @@ function PartidasRecentes(props: PartidasRecentesProps) {
 						<p className="body-medium text-[#00729B]">{item2.adversario}</p>
 					</div>
 				</div>
-				<div className="bg-[#CEF2FF] p-10 gap-10 flex justify-around items-center">
+				<div className="bg-[#CEF2FF] p-10 gap-10 flex justify-around rounded-[15px]">
 					<div className="flex flex-col">
 						<p className="h3-bold text-[#00729B]">{item3.sigla_equipe}</p>
 						<p className="body-medium text-[#00729B]">{item3.equipe}</p>
