@@ -16,7 +16,7 @@ function BotaoComRota(props: BotaoComRotaProps) {
 						size === "medium" ? "body-medium-bold" : "body-small-bold"
 					}`}
 				>
-					+ {texto}
+					{texto}
 				</p>
 			</Link>
 		</div>

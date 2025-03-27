@@ -341,7 +341,7 @@ function AbaJogadores() {
 			<TabHeader
 				texto="Total de jogadores"
 				numero={10}
-				botao="Adicionar jogador"
+				botao="+ Adicionar jogador"
 				route="/adicionar-jogador"
 			/>
 			<Table items={players} title="Tabela de jogadores" />
