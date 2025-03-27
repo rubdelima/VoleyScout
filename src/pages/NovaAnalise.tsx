@@ -8,7 +8,7 @@ function NovaAnalise(props: NovaAnaliseProps) {
 		<div className="flex flex-col align-center">
 			<Header />
 			<Layout>
-				<Title title="Nova análise" />
+				<Title title="Nova análise" showBackButton />
 			</Layout>
 		</div>
 	);
