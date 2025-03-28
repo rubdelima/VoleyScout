@@ -153,7 +153,7 @@ function AdicionarJogador() {
 						<div className="col-span-1 md:col-span-4 pt-4">
 							<fieldset>
 								<legend className="font-semibold block pb-1">Esse jogador é capitão?</legend>
-									<div className="flex items-center mt-2">
+									<div className="flex items-center mt-2 mb-4">
 										<input
 											type="radio"
 											id="capitao-sim"
@@ -165,7 +165,7 @@ function AdicionarJogador() {
 										/>
 										<label htmlFor="capitao-sim">Sim</label>
 									</div>
-									<div className="flex items-center mt-2">
+									<div className="flex items-center mt-2 mb-4">
 										<input
 											type="radio"
 											id="capitao-nao"
