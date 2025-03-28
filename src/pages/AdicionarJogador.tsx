@@ -157,13 +157,13 @@ function AdicionarJogador() {
 										<input
 											type="radio"
 											id="capitao-sim"
-											name="capitao-sim"
+											name="capitao"
 											value="true"
 											checked={formData.capitao === true}
 											onChange={() => setFormDataField({ name: 'capitao', value: true })}
 											className="mr-2 w-6 h-6 text-primary bg-white border-disabled focus:ring-primary"
 										/>
-										<label htmlFor="capitaoSim">Sim</label>
+										<label htmlFor="capitao-sim">Sim</label>
 									</div>
 									<div className="flex items-center mt-2">
 										<input
