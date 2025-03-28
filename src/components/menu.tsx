@@ -50,6 +50,11 @@ function Menu() {
 			route: "/adicionar-analise",
 			showOnMenu: false,
 		},
+		{
+			title: "Análise",
+			route: "/analise",
+			showOnMenu: false,
+		},
 	];
 
 	const getTitle = () => {
