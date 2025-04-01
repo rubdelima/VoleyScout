@@ -40,7 +40,8 @@ def add_analyzer(analyzer : schemas.AnalyzerName) ->str:
         )
         conn.commit()
         return analyzer_id
-    except:
+    except Exception as e:
+        print(e)
         raise HTTPException(status_code=400, detail="Erro ao inserir analizador.")
     finally:
         conn.close()
@@ -49,20 +50,24 @@ def get_analyzer(analyzer: schemas.AnalyzerBase) -> schemas.AnalyzerDB:
     conn, cursor = get_db_connection()
     try:
         cursor.execute(
-            """SELECT id, name, nickname, password FROM Analyzer WHERE name=? AND nickname=? AND password=?""",
-            (analyzer.name, analyzer.nickname, analyzer.password)
+            """SELECT id, name, nickname, password FROM Analyzer WHERE nickname=?""",
+            (analyzer.nickname,)
         )
         row = cursor.fetchone()
         if row is None:
+            print("Row not found")
             raise HTTPException(status_code=404, detail="Analizador não encontrado.")
         
         if not verify_password(analyzer.password, row[3]):
+            print("Invalid password")
             raise HTTPException(status_code=401, detail="Senha inválida.")
         
-        return schemas.AnalyzerDB(id=row[0], name=row[1], nickname=row[2], password=row[3])
+        return schemas.AnalyzerDB(id=row[0], name=row[1], nickname=row[2], password=analyzer.password)
     
-    except:
+    except Exception as e:
+        print(e)
         raise HTTPException(status_code=400, detail="Erro ao buscar analizador.")
+    
     
     finally:
         conn.close()

@@ -24,10 +24,11 @@ async def create_analyzer(analyzer: schemas.AnalyzerName):
         Um objeto AnalyzerDB com o ID gerado.
     """
     analyzer_id = crud.add_analyzer(analyzer)
+    print(analyzer_id)
     return schemas.AnalyzerDB(id=analyzer_id, **analyzer.model_dump())
 
-@router.get("/analyzer", response_model=schemas.AnalyzerDB)
-async def get_analyzer(analyzer:schemas.AnalyzerBase):
+@router.post("/login", response_model=schemas.AnalyzerDB)
+async def login_analyzer(analyzer:schemas.AnalyzerBase):
     """
     Endpoint para buscar um analizador a partir dos dados de entrada.
     

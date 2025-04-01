@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS Analyzer (
     id TEXT PRIMARY KEY,                     -- Identificador único do Analisador
     name TEXT NOT NULL,                      -- Nome do Analisador
     nickname TEXT NOT NULL UNIQUE,           -- Nickname do Analisador
-    password TEXT NOT NULL,                  -- Senha do Analisador
+    password TEXT NOT NULL                  -- Senha do Analisador
 );
 
 -- Tabela Team: Armazena os dados dos times.
