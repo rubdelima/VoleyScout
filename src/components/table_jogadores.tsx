@@ -115,7 +115,7 @@ function TableJogadores(props: TableJogadoresProps) {
 								<p className="opacity-80">{player.analises}</p>
 							</td>
 							<td>
-								<BotaoComRota texto="Análise" route="/nova-analise" size="small" />
+								<BotaoComRota texto="+ Análise" route="/nova-analise" size="small" />
 							</td>
 						</tr>
 					))}
