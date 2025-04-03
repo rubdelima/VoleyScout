@@ -5,51 +5,55 @@ import Subtitle from "../../src/components/subtitle";
 import { useState } from "react";
 import IndicadorObrigatorio from "../components/indicador_obrigatorio";
 import BotaoCallback, { BotaoCallbackStyle } from "../components/botao_callback";
-
-export interface Jogador {
-	nome: string;
-	apelido: string;
-	posicao: Posicao;
-	numero: string;
-	altura_cm: number;
-	nascimento: string;
-	capitao: boolean;
-}
-
-export enum Posicao {
-	Ponteiro = "Ponteiro",
-	Oposto = "Oposto",
-	Central = "Central",
-	Levantador = "Levantador",
-	Líbero = "Líbero"
-}
+import { apiService } from "../services/fest-volei-service";
+import { Jogador, Posicao } from "../constants/Jogador";
 
 const LABEL_CLASSNAMES = "text-zerondary font-semibold block pb-1";
 const INPUT_CLASSNAMES = "border-2 p-2.5 w-full rounded-md border-zerondary focus:outline-none focus:ring-2 focus:ring-primary";
 
 function AdicionarJogador() {
 	const [formData, setFormData] = useState<Jogador>({
-		nome: "",
-		apelido: "",
-		posicao: Posicao.Ponteiro,
-		numero: "",
-		altura_cm: 0,
-		nascimento: "",
-		capitao: false
+		name: "",
+		nickname: "",
+		position: Posicao.Ponteiro,
+		number: "",
+		height: 0,
+		birthdate: "",
+		isCaptain: false,
+		team: ""
 	});
 
-	const setFormDataField = <K extends keyof Jogador>(field: { name: K, value: Jogador[K] }) => {
-		const { name, value } = field;
+	const setFormDataField = <K extends keyof Jogador>(field: { name_field: K, value: Jogador[K] }) => {
+		const { name_field, value } = field;
 		setFormData({
 			...formData,
-			[name]: value
+			[name_field]: value
 		});
 	};
 
 	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		// TODO: Perform form submission logic here
-		console.log(formData);
+		const [day, month, year] = formData.birthdate.split('/');
+		const formattedDate = `${year}-${month}-${day}T00:00:00`;	
+		const jogadorFormatado = {
+			...formData,
+			birthdate: formattedDate
+		};	
+		apiService.adicionarJogador(jogadorFormatado).then(() => {
+			alert("Jogador salvo com sucesso!")
+			setFormData({
+				name: "",
+				nickname: "",
+				position: Posicao.Ponteiro,
+				number: "",
+				height: 0,
+				birthdate: "",
+				isCaptain: false,
+				team: ""
+			});
+		}).catch(() => 
+			alert("Ocorreu um erro ao tentar salvar o jogador!")
+		);
 	};
 
 	return (
@@ -67,8 +71,8 @@ function AdicionarJogador() {
 								type="text"
 								id="nome-completo"
 								name="nome-completo"
-								value={formData.nome}
-								onChange={(e) => setFormDataField({ name: 'nome', value: e.target.value })}
+								value={formData.name}
+								onChange={(e) => setFormDataField({ name_field: 'name', value: e.target.value })}
 								className={INPUT_CLASSNAMES}
 								required
 								placeholder="Digite"
@@ -80,8 +84,8 @@ function AdicionarJogador() {
 								type="text"
 								id="apelido"
 								name="apelido"
-								value={formData.apelido}
-								onChange={(e) => setFormDataField({ name: 'apelido', value: e.target.value })}
+								value={formData.nickname}
+								onChange={(e) => setFormDataField({ name_field: 'nickname', value: e.target.value })}
 								className={INPUT_CLASSNAMES}
 								placeholder="Digite"
 							/>
@@ -91,8 +95,8 @@ function AdicionarJogador() {
 							<select
 								id="posicao"
 								name="posicao"
-								value={formData.posicao}
-								onChange={(e) => setFormDataField({ name: 'posicao', value: e.target.value as Posicao })}
+								value={formData.position}
+								onChange={(e) => setFormDataField({ name_field: 'position', value: e.target.value as Posicao })}
 								className={INPUT_CLASSNAMES}
 								required
 							>
@@ -109,14 +113,14 @@ function AdicionarJogador() {
 								type="text"
 								id="altura-cm"
 								name="altura-cm"
-								value={formData.altura_cm}
+								value={formData.height}
 								onChange={(e) => {
 									const value = e.target.value;
 									const numericValue = parseInt(value, 10);
 									if (!isNaN(numericValue) && numericValue >= 0) {
-										setFormDataField({ name: 'altura_cm', value: numericValue });
+										setFormDataField({ name_field: 'height', value: numericValue });
 									} else if (value === "") {
-										setFormDataField({ name: 'altura_cm', value: 0 });
+										setFormDataField({ name_field: 'height', value: 0 });
 									}
 								}}
 								className={INPUT_CLASSNAMES}
@@ -130,8 +134,8 @@ function AdicionarJogador() {
 								type="text"
 								id="numero"
 								name="numero"
-								value={formData.numero}
-								onChange={(e) => setFormDataField({ name: 'numero', value: e.target.value })}
+								value={formData.number}
+								onChange={(e) => setFormDataField({ name_field: 'number', value: e.target.value })}
 								className={INPUT_CLASSNAMES}
 								required
 								placeholder="Digite"
@@ -143,11 +147,22 @@ function AdicionarJogador() {
 								type="text"
 								id="nascimento"
 								name="nascimento"
-								value={formData.nascimento}
-								onChange={(e) => setFormDataField({ name: 'nascimento', value: e.target.value })}
+								value={formData.birthdate}
+								onChange={(e) => setFormDataField({ name_field: 'birthdate', value: e.target.value })}
 								className={INPUT_CLASSNAMES}
 								required
-								placeholder="dd/mm/aaaa"
+							/>
+						</div>
+						<div className="col-span-1">
+							<label htmlFor="team" className={LABEL_CLASSNAMES}>Time <IndicadorObrigatorio obrigatorio={true} /></label>
+							<input
+								type="text"
+								id="team"
+								name="team"
+								value={formData.team}
+								onChange={(e) => setFormDataField({ name_field: 'team', value: e.target.value })}
+								className={INPUT_CLASSNAMES}
+								required
 							/>
 						</div>
 						<div className="col-span-1 md:col-span-4 pt-4">
@@ -159,8 +174,8 @@ function AdicionarJogador() {
 											id="capitao-sim"
 											name="capitao"
 											value="true"
-											checked={formData.capitao === true}
-											onChange={() => setFormDataField({ name: 'capitao', value: true })}
+											checked={formData.isCaptain === true}
+											onChange={() => setFormDataField({ name_field: 'isCaptain', value: true })}
 											className="mr-2 w-6 h-6 text-primary bg-white border-disabled focus:ring-primary"
 										/>
 										<label htmlFor="capitao-sim">Sim</label>
@@ -171,8 +186,8 @@ function AdicionarJogador() {
 											id="capitao-nao"
 											name="capitao"
 											value="false"
-											checked={formData.capitao === false}
-											onChange={() => setFormDataField({ name: 'capitao', value: false })}
+											checked={formData.isCaptain === false}
+											onChange={() => setFormDataField({ name_field: 'isCaptain', value: false })}
 											className="mr-2 w-6 h-6 text-primary bg-white border-disabled focus:ring-primary"
 										/>
 										<label htmlFor="capitao-nao">Não</label>
@@ -186,7 +201,7 @@ function AdicionarJogador() {
 					}}>
 						Cancelar
 					</BotaoCallback>
-					<BotaoCallback className="w-44" style={BotaoCallbackStyle.Filled}>
+					<BotaoCallback className="w-44" style={BotaoCallbackStyle.Filled} type="submit">
 						Confirmar
 					</BotaoCallback>
 					</div>

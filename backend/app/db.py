@@ -1,7 +1,7 @@
 import os
 import sqlite3
 
-base_dir = os.path.join(os.getcwd(), "backend")
+base_dir = os.path.join(os.getcwd(), "")
 DB_NAME = os.path.join(base_dir, "data", "volleyball.db")
 TABLES = os.path.join(base_dir, "data", "tables.sql")
 

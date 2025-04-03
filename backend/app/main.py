@@ -9,12 +9,22 @@ sys.path.append(os.path.join(os.getcwd(), 'backend'))
 
 from fastapi import FastAPI
 import app.routes as routes
+from fastapi.middleware.cors import CORSMiddleware
 
 # Criar a aplicação FastAPI
 app = FastAPI(
     title="Volleyball Stats API",
     description="API para gerenciamento de partidas, jogadores e estatísticas de voleibol.",
     version="1.0.0"
+)
+
+# TODO:: Ajustar as políticas
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 # Incluir as rotas definidas em `routes.py`
