@@ -26,4 +26,9 @@ yarn-error.log*
 index.css
 
 # Backend venv
+/.volei
 /volei
+/backend/.volei
+backend/.volei
+
+*__pycache__*
