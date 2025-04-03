@@ -368,7 +368,7 @@ function AbaPartidas() {
 			<TabHeader
 				texto="Total de partidas analisadas nesta equipe"
 				numero={16}
-				botao="Adicionar partida"
+				botao="+ Adicionar partida"
 				route="/nova-partida"
 			/>
 			<PartidasRecentes
