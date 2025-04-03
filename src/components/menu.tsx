@@ -10,6 +10,12 @@ import MenuRoundedIcon from "@mui/icons-material/Menu";
 import { useNavigate, useLocation } from "react-router-dom"; // Importando o hook useNavigate e useLocation
 import Stack from "@mui/material/Stack"; // Usando o Stack para alinhamento horizontal
 
+interface MenuRouteItem {
+	title: string;
+	route: string;
+	showOnMenu: boolean;
+}
+
 function Menu() {
 	const [state, setState] = React.useState({
 		left: false,
@@ -17,6 +23,44 @@ function Menu() {
 
 	const navigate = useNavigate(); // Usando o hook useNavigate
 	const location = useLocation(); // Usando o hook useLocation para obter a rota atual
+
+	const menuRoutes: MenuRouteItem[] = [
+		{
+			title: "Página inicial",
+			route: "/",
+			showOnMenu: true,
+		},
+		{
+			title: "Equipes",
+			route: "/equipes",
+			showOnMenu: true,
+		},
+		{
+			title: "Meu time",
+			route: "/meu-time",
+			showOnMenu: true,
+		},
+		{
+			title: "Adicionar jogador",
+			route: "/adicionar-jogador",
+			showOnMenu: false,
+		},
+		{
+			title: "Adicionar análise",
+			route: "/adicionar-analise",
+			showOnMenu: false,
+		},
+		{
+			title: "Análise",
+			route: "/analise",
+			showOnMenu: false,
+		},
+	];
+
+	const getTitle = () => {
+		const currentRoute = menuRoutes.find((routeItem) => routeItem.route === location.pathname);
+		return currentRoute?.title ?? "VolleyStats";
+	}
 
 	// Função para abrir/fechar o Drawer
 	const toggleDrawer =
@@ -33,36 +77,8 @@ function Menu() {
 		};
 
 	// Função de redirecionamento
-	const handleNavigation = (route: string) => {
-		navigate(route); // Realiza o redirecionamento para a página correspondente
-	};
-
-	// Função que retorna a rota correspondente para cada item do menu
-	const getRoute = (index: number) => {
-		switch (index) {
-			case 0:
-				return "/"; // Página Inicial
-			case 1:
-				return "/equipes"; // Equipes
-			case 2:
-				return "/meu-time"; // Meu time
-			default:
-				return "/";
-		}
-	};
-
-	// Função que retorna o título de acordo com a rota atual
-	const getTitle = () => {
-		switch (location.pathname) {
-			case "/":
-				return "Página inicial";
-			case "/equipes":
-				return "Equipe";
-			case "/meu-time":
-				return "Meu time";
-			default:
-				return "";
-		}
+	const handleNavigation = (routeItem: MenuRouteItem) => {
+		navigate(routeItem.route); // Realiza o redirecionamento para a página correspondente
 	};
 
 	const list = () => (
@@ -73,10 +89,10 @@ function Menu() {
 			onKeyDown={toggleDrawer(false)}
 		>
 			<List>
-				{["Página inicial", "Equipes", "Meu time"].map((text, index) => (
-					<ListItem key={text} disablePadding>
-						<ListItemButton onClick={() => handleNavigation(getRoute(index))}>
-							<ListItemText primary={text} />
+				{menuRoutes.filter((routeItem) => routeItem.showOnMenu).map((item) => (
+					<ListItem key={item.route} disablePadding>
+						<ListItemButton onClick={() => handleNavigation(item)}>
+							<ListItemText primary={item.title} />
 						</ListItemButton>
 					</ListItem>
 				))}
