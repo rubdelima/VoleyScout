@@ -5,8 +5,6 @@ base_dir = os.path.join(os.getcwd(), "backend")
 DB_NAME = os.path.join(base_dir, "data", "volleyball.db")
 TABLES = os.path.join(base_dir, "data", "tables.sql")
 
-"./data/volleyball.db"
-
 def get_db_connection():
     conn = sqlite3.connect(DB_NAME)
     cursor = conn.cursor()

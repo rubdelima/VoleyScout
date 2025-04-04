@@ -30,6 +30,15 @@ app.add_middleware(
     allow_headers=["*"],  # Permitir todos os headers
 )
 
+# TODO:: Ajustar as políticas
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 # Incluir as rotas definidas em `routes.py`
 app.include_router(routes.router)
 

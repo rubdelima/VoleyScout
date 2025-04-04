@@ -18,7 +18,7 @@ function BotaoCallback(props: BotaoCallbackProps) {
 
 	return (
             <button
-                type={onClick ? "button" : "submit"}
+                type={props.type ?? (onClick ? "button" : "submit")}
                 onClick={onClick}
                 disabled={disabled}
                 className={`${BUTTON_BASE_CLASSNAMES} ${BUTTON_CLASSNAMES_BY_STYLE[style]} ${INJECTED_CLASSNAMES}`}
@@ -35,6 +35,7 @@ interface BotaoCallbackProps {
     className?: string;
     disabled?: boolean;
     style: BotaoCallbackStyle;
+    type?: "button" | "submit";
 	onClick?: () => void;
 }
 
