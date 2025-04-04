@@ -3,7 +3,7 @@ import Title from "../../src/components/title";
 import Layout from "../../src/components/layout";
 import LabTabs from "../components/tabs";
 import AbaVincularPartida from "../components/aba_vincular_partida";
-import AbaPartidas from "../components/aba_partidas";
+import AbaCriarPartida from "../components/aba_criar_partida";
 
 function NovaAnalise(props: NovaAnaliseProps) {
   //const {} = props;
@@ -17,7 +17,7 @@ function NovaAnalise(props: NovaAnaliseProps) {
           titleOne="Vincular a uma partida"
           titleTwo="Criar partida"
           contentOne={<AbaVincularPartida />}
-          contentTwo={<AbaPartidas />}
+          contentTwo={<AbaCriarPartida />}
         />
       </Layout>
     </div>
