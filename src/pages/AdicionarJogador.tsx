@@ -140,7 +140,7 @@ function AdicionarJogador() {
 						<div className="col-span-1">
 							<label htmlFor="nascimento" className={LABEL_CLASSNAMES}>Nascimento <IndicadorObrigatorio obrigatorio={true} /></label>
 							<input
-								type="text"
+								type="date"
 								id="nascimento"
 								name="nascimento"
 								value={formData.nascimento}
