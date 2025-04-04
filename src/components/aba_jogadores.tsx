@@ -1,5 +1,5 @@
 import TabHeader from "./tab_header";
-import Table from "./table_jogadores";
+import Table, { Player } from "./table_jogadores";
 import { useEffect, useState } from "react";
 // Mockado
 //const players = [
@@ -335,7 +335,11 @@ import { useEffect, useState } from "react";
 //	},
 //];
 
-function AbaJogadores({players}: any) {
+interface AbaJogadoresProps {
+	players: Player[];
+}
+
+function AbaJogadores({players}: AbaJogadoresProps) {
 	return (
 		<div className="flex flex-col gap-10">
 			<TabHeader

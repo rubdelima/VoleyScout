@@ -37,14 +37,14 @@ function PaginaInicial(props: PaginaInicialProps) {
 					<div className="bg-[#00729B] py-[8px] px-[14px] w-fit rounded-[100px]">
 						<p className="body-small font-bold text-white">Equipe Principal</p>
 					</div>
-					<p className="titulo">{team?.abbreviation}</p>
-					<p className="body-large opacity-80">{team?.name}</p>
+					<p className="titulo">{team?.abbreviation || 'Err'}</p>
+					<p className="body-large opacity-80">{team?.name || 'Sem contexto'}</p>
 				</div>
 				<LabTabs
 					titleOne="Jogadores"
 					titleTwo="Partidas"
 					contentOne={<AbaJogadores players={team?.players || []} />}
-					contentTwo={<AbaPartidas />}
+					contentTwo={<AbaPartidas matches={team?.matches || []} />}
 				/>
 			</Layout>
 		</div>
