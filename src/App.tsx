@@ -6,6 +6,7 @@ import AdicionarJogador from "./pages/AdicionarJogador";
 import NovaPartida from "./pages/NovaPartida";
 import NovaAnalise from "./pages/NovaAnalise";
 import Analise from "./pages/Analise";
+import Estatisticas from "./pages/Estatisticas";
 
 function App() {
 	return (
@@ -19,9 +20,11 @@ function App() {
 				<Route path="/nova-analise" element={<NovaAnalise />} />
 				<Route path="/nova-partida" element={<NovaPartida />} />
 				<Route path="/analise" element={<Analise />} />
+				<Route path="/estatisticas" element={<Estatisticas />} />
+        		<Route path="/estatisticas/:action" element={<Estatisticas />} />
 			</Routes>
 		</Router>
 	);
-}
+};
 
 export default App;
