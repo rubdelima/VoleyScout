@@ -12,7 +12,7 @@ function PaginaInicial(props: PaginaInicialProps) {
 	
 	const { sigla, pais } = props;
 	const [team, setTeam] = useState<Team | null>(null);
-	const teamId = "a21cb5a4-3a30-42fe-82e9-320307b09122"; // Tem que ver se tem como pegar pelo contexto, do usuário. 
+	const teamId = "d001da58-7275-407e-9225-52efa2fbae0d"; // Tem que ver se tem como pegar pelo contexto, do usuário. 
 	useEffect(() => {
 		const fetchTeam = async () => {
 			try {
@@ -37,8 +37,8 @@ function PaginaInicial(props: PaginaInicialProps) {
 					<div className="bg-[#00729B] py-[8px] px-[14px] w-fit rounded-[100px]">
 						<p className="body-small font-bold text-white">Equipe Principal</p>
 					</div>
-					<p className="titulo">{team?.abbreviation || 'Err'}</p>
-					<p className="body-large opacity-80">{team?.name || 'Sem contexto'}</p>
+					<p className="titulo">{team?.abbreviation || '-'}</p>
+					<p className="body-large opacity-80">{team?.name || '-'}</p>
 				</div>
 				<LabTabs
 					titleOne="Jogadores"
