@@ -17,7 +17,6 @@ export interface Partida {
 	jogadores_analisados: number;
 }
 
-
 interface TablePartidasProps {
 	items: Partida[];
 	title: string;
