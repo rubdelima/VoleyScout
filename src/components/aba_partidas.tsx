@@ -358,9 +358,24 @@ import PartidasRecentes, { Partida } from "../../src/components/partidas_recente
 interface AbaPartidasProps {
 	matches: Partida[];
 }
+function mapMatchesToPartida(matches: any[]): Partida[] {
+	return matches.map(match => ({
+		id: match.id,
+		equipe: match.team,
+		sigla_equipe: '', // Informação ausente no JSON
+		adversario: match.adversary,
+		sigla_adversario: '', // Informação ausente no JSON
+		n_sets: match.nSets,
+		resultado: `${match.teamSets}x${match.adversarySets}`,
+		data: match.matchTime,
+		situacao: match.win ? 'Vitória' : 'Derrota',
+		jogadores_analisados: match.analyzedPlayers
+	}));
+}
 
 function AbaPartidas({matches}: AbaPartidasProps) {
-	const partidasOrdenadas = matches.sort((a, b) => {
+	const partidas = mapMatchesToPartida(matches);
+	const partidasOrdenadas = partidas.sort((a, b) => {
 		// Converte as datas para objetos Date e compara
 		return new Date(b.data).getTime() - new Date(a.data).getTime();
 	});
@@ -380,7 +395,7 @@ function AbaPartidas({matches}: AbaPartidasProps) {
 				item2={tresPartidasRecentes[1]}
 				item3={tresPartidasRecentes[2]}
 			/>
-			<TablePartidas items={matches} title="Todas as partidas" />
+			<TablePartidas items={partidas} title="Todas as partidas" />
 		</div>
 	);
 }
