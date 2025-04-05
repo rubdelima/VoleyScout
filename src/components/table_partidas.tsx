@@ -4,7 +4,7 @@ import { ReactComponent as CustomArrow } from "../assets/seta.svg";
 import Analisador from "../components/analisador";
 import Subtitle from "../components/subtitle";
 
-interface Partida {
+export interface Partida {
 	id: number;
 	equipe: string;
 	sigla_equipe: string;
@@ -16,6 +16,7 @@ interface Partida {
 	situacao: string;
 	jogadores_analisados: number;
 }
+
 
 interface TablePartidasProps {
 	items: Partida[];

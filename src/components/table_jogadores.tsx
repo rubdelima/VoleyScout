@@ -4,16 +4,16 @@ import { ReactComponent as CustomArrow } from "../assets/seta.svg";
 import BotaoComRota from "./botao_com_rota";
 import Subtitle from "../components/subtitle";
 
-interface Player {
+export interface Player {
 	id: number;
-	nome: string;
-	apelido: string;
-	posicao: string;
-	numero: number;
-	altura: number;
-	nascimento: string;
-	analises: number;
-	capitao: boolean;
+	name: string;
+	nickname: string;
+	position: string;
+	number: number;
+	height: number;
+	birthdate: string;
+	analysis: number;
+	isCaptain: boolean;
 }
 
 interface TableJogadoresProps {
@@ -78,41 +78,41 @@ function TableJogadores(props: TableJogadoresProps) {
 					{currentItems.map((player) => (
 						<tr key={player.id}>
 							<td>
-								<p className="opacity-80">{player.nome}</p>
+								<p className="opacity-80">{player.name}</p>
 							</td>
 							<td>
-								{player.capitao ? (
+								{player.name ? (
 									<span className="flex items-center gap-3">
-										<p className="opacity-80">{player.apelido}</p>{" "}
+										<p className="opacity-80">{player.nickname}</p>{" "}
 										<span className="bg-[#FADD00] w-[25px] h-[25px] rounded-[50%] flex justify-center items-center">
 											<p className="body-medium-bold text-white">C</p>
 										</span>
 									</span>
-								) : player.posicao === "Libero" ? (
+								) : player.position === "Libero" ? (
 									<span className="flex items-center gap-3">
-										<p className="opacity-80">{player.apelido}</p>{" "}
+										<p className="opacity-80">{player.nickname}</p>{" "}
 										<span className="bg-[#29A3CF] w-[25px] h-[25px] rounded-[50%] flex justify-center items-center">
 											<p className="body-medium-bold text-white">L</p>
 										</span>
 									</span>
 								) : (
-									<p className="opacity-80">{player.apelido}</p>
+									<p className="opacity-80">{player.nickname}</p>
 								)}
 							</td>
 							<td>
-								<p className="opacity-80">{player.posicao}</p>
+								<p className="opacity-80">{player.position}</p>
 							</td>
 							<td>
-								<p className="opacity-80">{player.numero}</p>
+								<p className="opacity-80">{player.number}</p>
 							</td>
 							<td>
-								<p className="opacity-80">{player.altura}</p>
+								<p className="opacity-80">{(player.height/100).toFixed(2)}</p>
 							</td>
 							<td>
-								<p className="opacity-80">{player.nascimento}</p>
+								<p className="opacity-80">{new Date(player.birthdate).toLocaleDateString("pt-BR")}</p>
 							</td>
 							<td>
-								<p className="opacity-80">{player.analises}</p>
+								<p className="opacity-80">{player.analysis}</p>
 							</td>
 							<td>
 								<BotaoComRota texto="+ Análise" route="/nova-analise" size="small" />
