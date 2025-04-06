@@ -8,7 +8,7 @@ WORKDIR /app
 COPY backend/requirements.txt /app/backend/requirements.txt
 
 # Instala as dependências do backend
-RUN pip install --no-cache-dir -r /app/backend/requirements.txt
+RUN pip install -r /app/backend/requirements.txt
 
 # Copia o código do backend
 COPY backend /app/backend
@@ -37,9 +37,6 @@ WORKDIR /app
 # Copia os arquivos de backend e frontend
 COPY --from=frontend /app /app
 COPY --from=backend /app/backend /app/backend
-
-# Instala o uvicorn e Gunicorn para o backend FastAPI
-RUN pip install --no-cache-dir uvicorn gunicorn
 
 # Exponha a porta 8000 para o backend FastAPI
 EXPOSE 8000
