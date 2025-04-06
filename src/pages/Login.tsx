@@ -1,9 +1,10 @@
 import volleyballImg from '../assets/login_volei.png';
+import scoutAiLogo from '../assets/ScoutAí.png'; // Novo logo
 
 function Login() {
 	return (
 		<div className="flex h-screen">
-			{/* Left Side - Image */}
+			{/* Lado esquerdo - imagem */}
 			<div className="w-1/2 h-screen">
 				<img
 					src={volleyballImg}
@@ -12,10 +13,16 @@ function Login() {
 				/>
 			</div>
 
-			{/* Right Side - Form */}
+			{/* Lado direito - formulário */}
 			<div className="w-1/2 h-screen flex items-center justify-center">
 				<div className="w-full max-w-sm px-8">
-					<h2 className="text-2xl font-semibold text-center text-cyan-800 mb-6">Login</h2>
+					{/* Logo com imagem */}
+					<div className="flex flex-col items-center mb-6">
+						<img src={scoutAiLogo} alt="ScoutAí Logo" className="h-10" />
+						<h2 className="text-lg font-semibold text-cyan-800 mt-6">
+							Login
+						</h2>
+					</div>
 
 					<form className="space-y-4">
 						<div>

@@ -1,9 +1,10 @@
 import volleyballImg from '../assets/login_volei.png';
+import scoutAiLogo from '../assets/ScoutAí.png';
 
 function Registrar() {
 	return (
 		<div className="flex h-screen">
-			{/* Left Side - Image */}
+			{/* Lado esquerdo - imagem */}
 			<div className="w-1/2 h-screen">
 				<img
 					src={volleyballImg}
@@ -12,14 +13,19 @@ function Registrar() {
 				/>
 			</div>
 
-			{/* Right Side - Form */}
+			{/* Lado direito - formulário */}
 			<div className="w-1/2 h-screen flex items-center justify-center">
 				<div className="w-full max-w-sm px-8">
-					<h2 className="text-2xl font-semibold text-center text-cyan-800 mb-6">
-						Crie sua conta
-					</h2>
+					{/* Logo + título */}
+					<div className="flex flex-col items-center mb-6">
+					<div className="flex flex-col items-center mb-6">
+						<img src={scoutAiLogo} alt="ScoutAí Logo" className="h-10 mb-6" />
+						<h2 className="text-xl font-semibold text-cyan-800">Crie sua conta</h2>
+					</div>
 
-					<form className="space-y-4">
+					</div>
+
+					<form className="space-y-3">
 						<div>
 							<label className="text-sm text-gray-700">Nome completo</label>
 							<input
