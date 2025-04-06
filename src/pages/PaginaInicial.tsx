@@ -12,11 +12,11 @@ function PaginaInicial(props: PaginaInicialProps) {
 	
 	const { sigla, pais } = props;
 	const [team, setTeam] = useState<Team | null>(null);
-	const teamId = "d001da58-7275-407e-9225-52efa2fbae0d"; // Tem que ver se tem como pegar pelo contexto, do usuário. 
+	const teamId = "b0e9a145-0763-408b-a005-3d485935fe35"; // Tem que ver se tem como pegar pelo contexto, do usuário. 
 	useEffect(() => {
 		const fetchTeam = async () => {
 			try {
-				const response = await fetch(`http://127.0.0.1:8000/home/${teamId}`);
+				const response = await fetch(`http://127.0.0.1:8000/teams/${teamId}`);
 				if (!response.ok) {
 					throw new Error("Erro ao buscar o time");
 				}
