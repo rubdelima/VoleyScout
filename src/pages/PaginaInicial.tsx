@@ -12,7 +12,7 @@ function PaginaInicial(props: PaginaInicialProps) {
 	
 	const { sigla, pais } = props;
 	const [team, setTeam] = useState<Team | null>(null);
-	const teamId = "d001da58-7275-407e-9225-52efa2fbae0d"; // Tem que ver se tem como pegar pelo contexto, do usuário. 
+	const teamId = "ff30a370-d033-4957-b40e-d0e446f42abe"; // Tem que ver se tem como pegar pelo contexto, do usuário. 
 	useEffect(() => {
 		const fetchTeam = async () => {
 			try {
