@@ -6,7 +6,8 @@ import AdicionarJogador from "./pages/AdicionarJogador";
 import NovaPartida from "./pages/NovaPartida";
 import NovaAnalise from "./pages/NovaAnalise";
 import Analise from "./pages/Analise";
-
+import Login from "./pages/Login";
+import Registrar from "./pages/Registrar";
 function App() {
 	return (
 		<Router>
@@ -14,7 +15,8 @@ function App() {
 				<Route path="/" element={<PaginaInicial sigla="BRA" pais="Brasil" />} />
 				<Route path="/equipes" element={<Equipes />} />
 				<Route path="/meu-time" element={<MeuTime />} />
-
+				<Route path="/login" element={<Login/>} />
+				<Route path="/registrar" element={<Registrar/>} />
 				<Route path="/adicionar-jogador" element={<AdicionarJogador />} />
 				<Route path="/nova-analise" element={<NovaAnalise />} />
 				<Route path="/nova-partida" element={<NovaPartida />} />
