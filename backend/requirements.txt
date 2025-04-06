@@ -3,4 +3,6 @@ pandas==2.2.3
 pydantic==2.10.6
 uvicorn==0.34.0
 passlib==1.7.4
-bcrypt
+bcrypt==3.1.7
+psycopg2
+python-dotenv

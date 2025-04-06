@@ -1,19 +1,23 @@
 """
 Módulo CRUD para a aplicação de voleibol.
-Contém funções para inserir e consultar dados no banco de dados SQLite.
+Contém funções para inserir e consultar dados no banco de dados.
 As funções utilizam os esquemas definidos em schemas.py para validar e formatar os dados.
 """
 
 from fastapi import HTTPException
-from app.db import get_db_connection
+from app.db import db , get_db_connection_local, get_db_connection_deploy
 import uuid
 import app.schemas as schemas
 import pandas as pd  # type: ignore
 from datetime import datetime, timezone
 from typing import Optional, List
 from passlib.context import CryptContext
+import os
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+PARAM_PLACEHOLDER = db.param_placeholder
+DB_TYPE = db.database_type
 
 def hash_password(password: str) -> str:
     return pwd_context.hash(password)
@@ -21,9 +25,9 @@ def hash_password(password: str) -> str:
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
 
-def add_analyzer(analyzer : schemas.AnalyzerName) ->str:
+def add_analyzer(analyzer: schemas.AnalyzerName) -> str:
     """
-    Insere um novo analizador no banco de dados.\
+    Insere um novo analizador no banco de dados.
     
     Parâmetros:
         analyzer: Objeto do tipo AnalyzerBase com os dados do analizador.
@@ -31,13 +35,19 @@ def add_analyzer(analyzer : schemas.AnalyzerName) ->str:
     Retorna:
         O ID gerado para o analizador.
     """
-    conn, cursor = get_db_connection()
+    conn, cursor = db.get_db_connection()
     try:
         analyzer_id = str(uuid.uuid4())
-        cursor.execute(
-            """INSERT INTO Analyzer (id, name, nickname, password) VALUES (?,?,?,?)""",
+        if DB_TYPE == "DEPLOY":
+            cursor.execute(
+                "INSERT INTO Analyzer (id, name, nickname, password) VALUES (%s, %s, %s, %s)",
+                (analyzer_id, analyzer.name, analyzer.nickname, hash_password(analyzer.password))
+            )
+        else:
+            cursor.execute(
+            "INSERT INTO Analyzer (id, name, nickname, password) VALUES (?,?,?,?)",
             (analyzer_id, analyzer.name, analyzer.nickname, hash_password(analyzer.password))
-        )
+            )
         conn.commit()
         return analyzer_id
     except Exception as e:
@@ -47,12 +57,11 @@ def add_analyzer(analyzer : schemas.AnalyzerName) ->str:
         conn.close()
 
 def get_analyzer(analyzer: schemas.AnalyzerBase) -> schemas.AnalyzerDB:
-    conn, cursor = get_db_connection()
+    conn, cursor = db.get_db_connection()
     try:
-        cursor.execute(
-            """SELECT id, name, nickname, password FROM Analyzer WHERE nickname=?""",
-            (analyzer.nickname,)
-        )
+        query = f"SELECT id, name, nickname, password FROM Analyzer WHERE nickname={PARAM_PLACEHOLDER}"
+        cursor.execute(query, (analyzer.nickname,))
+        
         row = cursor.fetchone()
         if row is None:
             print("Row not found")
@@ -63,16 +72,13 @@ def get_analyzer(analyzer: schemas.AnalyzerBase) -> schemas.AnalyzerDB:
             raise HTTPException(status_code=401, detail="Senha inválida.")
         
         return schemas.AnalyzerDB(id=row[0], name=row[1], nickname=row[2], password=analyzer.password)
-    
+
     except Exception as e:
         print(e)
         raise HTTPException(status_code=400, detail="Erro ao buscar analizador.")
-    
-    
     finally:
         conn.close()
-
-
+        
 def add_team(team: schemas.TeamBase) -> str:
     """
     Insere um novo time no banco de dados.
@@ -83,15 +89,22 @@ def add_team(team: schemas.TeamBase) -> str:
     Retorna:
         O ID gerado para o time.
     """
-    conn, cursor = get_db_connection()
+    conn, cursor = db.get_db_connection()
     team_id = str(uuid.uuid4())
-    cursor.execute(
-        """INSERT INTO Team (id, name, abbreviation) VALUES (?, ?, ?)""",
-        (team_id, team.name, team.abbreviation)
-    )
+    query = f"INSERT INTO Team (id, name, abbreviation) VALUES ({PARAM_PLACEHOLDER}, {PARAM_PLACEHOLDER}, {PARAM_PLACEHOLDER})"
+    cursor.execute(query, (team_id, team.name, team.abbreviation))
     conn.commit()
     conn.close()
     return team_id
+
+def get_teams()-> schemas.TeamDB:
+    conn, cursor = db.get_db_connection()
+    query = "SELECT id, name, abbreviation FROM Team"
+    cursor.execute(query)
+    teams = cursor.fetchall()
+    conn.close()
+    teams_db = [schemas.TeamDB(id=row[0], name=row[1], abbreviation=row[2]) for row in teams]
+    return teams_db
 
 def add_player(player: schemas.PlayerBase) -> str:
     """
@@ -105,10 +118,14 @@ def add_player(player: schemas.PlayerBase) -> str:
         O ID gerado para o jogador.
     """
     player_id = str(uuid.uuid4())
-    conn, cursor = get_db_connection()
+    
+    conn, cursor = db.get_db_connection()
+    query = f"""INSERT INTO Player (id, name, nickname, position, number, height, birthdate, isCaptain, teamId)
+           VALUES ({PARAM_PLACEHOLDER}, {PARAM_PLACEHOLDER}, {PARAM_PLACEHOLDER}, {PARAM_PLACEHOLDER}, {PARAM_PLACEHOLDER}, 
+           {PARAM_PLACEHOLDER}, {PARAM_PLACEHOLDER}, {PARAM_PLACEHOLDER}, {PARAM_PLACEHOLDER})"""
+    
     cursor.execute(
-        """INSERT INTO Player (id, name, nickname, position, number, height, birthdate, isCaptain, teamId)
-           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+        query,
         (player_id, player.name, player.nickname, player.position, player.number, 
          player.height, player.birthdate, player.isCaptain, player.team)
     )
@@ -128,15 +145,20 @@ def add_match(match: schemas.MatchBase) -> str:
         O ID gerado para a partida.
     """
     match_id = str(uuid.uuid4())
-    conn, cursor = get_db_connection()
+    conn, cursor = db.get_db_connection()
+    query = f"""INSERT INTO Match (id, team1Id, team2Id, matchTime, isTournament)
+           VALUES ({PARAM_PLACEHOLDER}, {PARAM_PLACEHOLDER}, {PARAM_PLACEHOLDER}, {PARAM_PLACEHOLDER}, {PARAM_PLACEHOLDER})"""
     cursor.execute(
-        """INSERT INTO Match (id, team1Id, team2Id, matchTime, isTournament)
-           VALUES (?, ?, ?, ?, ?)""",
+        query,
         (match_id, match.team1Id, match.team2Id, match.matchTime, match.isTournament)
     )
     conn.commit()
     conn.close()
     return match_id
+
+def get_team_matches(team_id):
+    #TODO
+    pass
 
 def add_set(match_set: schemas.MatchSet):
     """
@@ -148,13 +170,13 @@ def add_set(match_set: schemas.MatchSet):
     Retorna:
         Mensagem de sucesso caso o set seja adicionado.
     """
-    conn, cursor = get_db_connection()
+    conn, cursor = db.get_db_connection()
 
     try:
         # Verifica se o set já existe para essa partida
-        query_check = """
+        query_check = f"""
             SELECT 1 FROM MatchSet 
-            WHERE matchId = ? AND setNumber = ?
+            WHERE matchId = {PARAM_PLACEHOLDER} AND setNumber = {PARAM_PLACEHOLDER}
         """
         cursor.execute(query_check, (match_set.matchId, match_set.setNumber))
         existing_set = cursor.fetchone()
@@ -163,9 +185,9 @@ def add_set(match_set: schemas.MatchSet):
             raise HTTPException(status_code=409, detail="Set já existe para essa partida.")
 
         # Inserção do novo set
-        query_insert = """
+        query_insert = f"""
             INSERT INTO MatchSet (matchId, setNumber, team1, team1Points, team2, team2Points) 
-            VALUES (?, ?, ?, ?, ?, ?)
+            VALUES ({PARAM_PLACEHOLDER}, {PARAM_PLACEHOLDER}, {PARAM_PLACEHOLDER}, {PARAM_PLACEHOLDER}, {PARAM_PLACEHOLDER}, {PARAM_PLACEHOLDER})
         """
         
         cursor.execute(query_insert, (
@@ -197,13 +219,13 @@ def add_report(report: schemas.SetReport):
     Retorna:
         Mensagem de sucesso caso o relatório seja adicionado.
     """
-    conn, cursor = get_db_connection()
+    conn, cursor = db.get_db_connection()
 
     try:
         # Verificar se já existe um relatório para o jogador neste set
-        query_check = """
+        query_check = f"""
             SELECT 1 FROM SetReport 
-            WHERE matchId = ? AND playerId = ? AND setNumber = ?
+            WHERE matchId = {PARAM_PLACEHOLDER} AND playerId = {PARAM_PLACEHOLDER} AND setNumber = {PARAM_PLACEHOLDER}
         """
         cursor.execute(query_check, (report.matchId, report.playerId, report.setNumber))
         existing_report = cursor.fetchone()
@@ -211,8 +233,9 @@ def add_report(report: schemas.SetReport):
         if existing_report:
             raise HTTPException(status_code=409, detail="Relatório já existe para este jogador neste set.")
 
-        # Query corrigida com a coluna 'reportTime'
-        query_insert = """
+        # Montar a query com placeholders adequados
+        placeholders = ", ".join([PARAM_PLACEHOLDER] * 26)
+        query_insert = f"""
             INSERT INTO SetReport (
                 matchId, playerId, setNumber, analyzer, reportTime,
                 playerInSet, hasSubs, playerIn,
@@ -221,7 +244,7 @@ def add_report(report: schemas.SetReport):
                 receptionA, receptionB, receptionC, receptionError,
                 blockCorrect, blockSoft, blockError,
                 setA, setB, setC, setD, setError
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ) VALUES ({placeholders})
         """
         
         # Executar a inserção
@@ -262,9 +285,9 @@ def get_player(player_id: str) -> schemas.PlayerDB:
         HTTPException (404) se o jogador não for encontrado.
     """
     try:
-        conn, cursor = get_db_connection()
-        query = """SELECT id, name, nickname, position, number, height, birthdate, isCaptain, teamId
-                   FROM Player WHERE id = ?"""
+        conn, cursor = db.get_db_connection()
+        query = f"""SELECT id, name, nickname, position, number, height, birthdate, isCaptain, teamId
+                   FROM Player WHERE id = {PARAM_PLACEHOLDER}"""
         cursor.execute(query, (player_id,))
         player = cursor.fetchone()
         if not player:
@@ -294,8 +317,9 @@ def get_team(team_id: str) -> schemas.TeamDB:
     Levanta:
         HTTPException (404) se o time não for encontrado.
     """
-    conn, cursor = get_db_connection()
-    cursor.execute("SELECT id, name, abbreviation FROM Team WHERE id = ?", (team_id,))
+    conn, cursor = db.get_db_connection()
+    query = f"SELECT id, name, abbreviation FROM Team WHERE id = {PARAM_PLACEHOLDER}"
+    cursor.execute(query, (team_id,))
     team = cursor.fetchone()
     conn.close()
     if team:
@@ -312,15 +336,16 @@ def get_team_players(team_id: str) -> List[schemas.PlayerTable]:
     Retorna:
         Lista de objetos do tipo PlayerTable.
     """
-    conn, cursor = get_db_connection()
-    cursor.execute("""
+    conn, cursor = db.get_db_connection()
+    query = f"""
         SELECT p.id, p.name, p.nickname, p.position, p.number, p.height, 
                p.birthdate, p.isCaptain, COUNT(sr.playerId) AS analysis
         FROM Player p
         LEFT JOIN SetReport sr ON p.id = sr.playerId
-        WHERE p.teamId = ?
+        WHERE p.teamId = {PARAM_PLACEHOLDER}
         GROUP BY p.id
-    """, (team_id,))
+    """
+    cursor.execute(query, (team_id,))
     players = cursor.fetchall()
     conn.close()
     return [
@@ -343,28 +368,31 @@ def get_team_matches(team_id: str) -> List[schemas.MatchResponse]:
         Lista de objetos do tipo MatchResponse.
     """
     try:
-        conn, cursor = get_db_connection()
+        conn, cursor = db.get_db_connection()
         
         # Busca as partidas do time
-        cursor.execute("""
+        query = f"""
             SELECT m.id, m.team1Id, m.team2Id, m.matchTime, m.isTournament, 
                    t1.name AS team1_name, t2.name AS team2_name
             FROM Match m
             JOIN Team t1 ON m.team1Id = t1.id
             JOIN Team t2 ON m.team2Id = t2.id
-            WHERE m.team1Id = ? OR m.team2Id = ?
-        """, (team_id, team_id))
+            WHERE m.team1Id = {PARAM_PLACEHOLDER} OR m.team2Id = {PARAM_PLACEHOLDER}
+        """
+        cursor.execute(query, (team_id, team_id))
         matches = cursor.fetchall()
         
         matches_responses = []
         match_ids = tuple(m[0] for m in matches)
         
         if match_ids:
-            cursor.execute(f"""
+            placeholders = ", ".join([PARAM_PLACEHOLDER] * 26)
+            query = f"""
                 SELECT matchId, team1, team1Points, team2, team2Points 
                 FROM MatchSet 
-                WHERE matchId IN ({','.join('?' * len(match_ids))})
-            """, match_ids)
+                WHERE matchId IN ({placeholders})
+            """
+            cursor.execute(query, match_ids)
             sets_data = cursor.fetchall()
         else:
             sets_data = []
@@ -389,16 +417,18 @@ def get_team_matches(team_id: str) -> List[schemas.MatchResponse]:
             win = team_sets > adversary_sets
             
             # Buscar jogadores analisados
-            cursor.execute("SELECT COUNT(DISTINCT playerId) FROM SetReport WHERE matchId = ?", (match_id,))
+            query = f"SELECT COUNT(DISTINCT playerId) FROM SetReport WHERE matchId = {PARAM_PLACEHOLDER}"
+            cursor.execute(query, (match_id,))
             analyzed_players = cursor.fetchone()[0]
             
             # Buscar os nomes dos analisadores
-            cursor.execute("""
+            query = f"""
                 SELECT DISTINCT a.name 
                 FROM SetReport sr
                 JOIN Analyzer a ON sr.analyzer = a.id
-                WHERE sr.matchId = ?
-            """, (match_id,))
+                WHERE sr.matchId = {PARAM_PLACEHOLDER}
+            """
+            cursor.execute(query, (match_id,))
             analyzers = [row[0] for row in cursor.fetchall()]
             
             matches_responses.append(schemas.MatchResponse(
@@ -414,26 +444,34 @@ def get_team_matches(team_id: str) -> List[schemas.MatchResponse]:
     finally:
         conn.close()
 
-
 def get_player_reports(player_id: str, match_id: Optional[str] = None):
     try:
-        conn, cursor = get_db_connection()
-
-        query = """
-            SELECT matchId, playerId, setNumber, analyzer, reportTime, playerInSet, hasSubs, playerIn,
-                   serveCorrect, servePoint, serveError,
-                   attackCorrect, attackPoint, attackError,
-                   receptionA, receptionB, receptionC, receptionError,
-                   blockCorrect, blockSoft, blockError,
-                   setA, setB, setC, setD, setError
-            FROM SetReport WHERE playerId = ?
-        """
-        params = [player_id]
+        conn, cursor = db.get_db_connection()
 
         if match_id:
-            query += " AND matchId = ?"
-            params.append(match_id)
+            query = f"""
+                SELECT matchId, playerId, setNumber, analyzer, reportTime, playerInSet, hasSubs, playerIn,
+                       serveCorrect, servePoint, serveError,
+                       attackCorrect, attackPoint, attackError,
+                       receptionA, receptionB, receptionC, receptionError,
+                       blockCorrect, blockSoft, blockError,
+                       setA, setB, setC, setD, setError
+                FROM SetReport WHERE playerId = {PARAM_PLACEHOLDER} AND matchId = {PARAM_PLACEHOLDER}
+            """
+            params = (player_id, match_id)
+        else:
+            query = f"""
+                SELECT matchId, playerId, setNumber, analyzer, reportTime, playerInSet, hasSubs, playerIn,
+                       serveCorrect, servePoint, serveError,
+                       attackCorrect, attackPoint, attackError,
+                       receptionA, receptionB, receptionC, receptionError,
+                       blockCorrect, blockSoft, blockError,
+                       setA, setB, setC, setD, setError
+                FROM SetReport WHERE playerId = {PARAM_PLACEHOLDER}
+            """
+            params = (player_id,)
 
+        # Para pandas.read_sql_query é necessário passar a conexão, não o cursor
         df = pd.read_sql_query(query, conn, params=params)
 
         if df.empty:
@@ -451,35 +489,20 @@ def get_player_reports(player_id: str, match_id: Optional[str] = None):
     finally:
         conn.close()
 
-
 def get_report_stats(player_id: str, match_id: str, previous: bool = False) -> schemas.PlayerReportResponse:
     """
-    Gera estatísticas de desempenho de um jogador em uma partida,
-    calculando métricas (tries, correct, points, errors, precision e evolution)
-    para cada ação (serve, attack, reception, block e set). Se houver uma partida anterior,
-    calcula a evolução com base na diferença de 'precision'.
-
-    Parâmetros:
-        player_id: ID do jogador.
-        match_id: ID da partida atual.
-        previous: Booleano para evitar recursão infinita (default False).
-
-    Retorna:
-        Objeto PlayerReportResponse com as estatísticas gerais e por ação.
-    
-    Levanta:
-        HTTPException (404) se nenhum relatório for encontrado.
+    Gera estatísticas de desempenho de um jogador em uma partida.
     """
-    conn, cursor = get_db_connection()
+    conn, cursor = db.get_db_connection()
     
     try:
-        query = """
+        query = f"""
             SELECT setNumber, serveCorrect, servePoint, serveError, 
                    attackCorrect, attackPoint, attackError, 
                    receptionA, receptionB, receptionC, receptionError, 
                    blockCorrect, blockSoft, blockError, 
                    setA, setB, setC, setD, setError 
-            FROM SetReport WHERE playerId = ? AND matchId = ?
+            FROM SetReport WHERE playerId = {PARAM_PLACEHOLDER} AND matchId = {PARAM_PLACEHOLDER}
         """
         df = pd.read_sql_query(query, conn, params=(player_id, match_id))
 
@@ -528,11 +551,11 @@ def get_report_stats(player_id: str, match_id: str, previous: bool = False) -> s
         general_df["precision"] = (general_df["correct"] + general_df["points"]) / general_df["tries"].replace(0, 1)
 
         if not previous:
-            prev_query = """
+            prev_query = f"""
                 SELECT id FROM Match WHERE matchTime < 
-                (SELECT matchTime FROM Match WHERE id = ?) 
-                AND (team1Id = (SELECT teamId FROM Player WHERE id = ?) 
-                OR team2Id = (SELECT teamId FROM Player WHERE id = ?)) 
+                (SELECT matchTime FROM Match WHERE id = {PARAM_PLACEHOLDER}) 
+                AND (team1Id = (SELECT teamId FROM Player WHERE id = {PARAM_PLACEHOLDER}) 
+                OR team2Id = (SELECT teamId FROM Player WHERE id = {PARAM_PLACEHOLDER})) 
                 ORDER BY matchTime DESC LIMIT 1
             """
             cursor.execute(prev_query, (match_id, player_id, player_id))
@@ -558,7 +581,7 @@ def get_report_stats(player_id: str, match_id: str, previous: bool = False) -> s
                 points=row.points,
                 errors=row.errors,
                 precision=row.precision,
-                evolution=row.evolution if "evolution" in row else None
+                evolution=row.evolution if "evolution" in row._fields else None
             )
             for row in general_df.itertuples()
         ]

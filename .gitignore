@@ -34,3 +34,5 @@ backend/.volei
 *__pycache__*
 
 /backend/data/volleyball.db
+
+*.env

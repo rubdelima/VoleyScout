@@ -59,6 +59,10 @@ async def create_team(team: schemas.TeamBase):
     team_id = crud.add_team(team)
     return schemas.TeamDB(id=team_id, **team.model_dump())
 
+@router.get("/teams", response_model=list[schemas.TeamDB])
+async def get_teams():
+    return crud.get_teams()
+
 
 @router.get('/home/{team_id}', response_model=schemas.TeamResponse)
 async def home(team_id: str):
@@ -110,6 +114,11 @@ async def create_match(match: schemas.MatchBase):
     match_id = crud.add_match(match)
     new_match = schemas.MatchDB(id=match_id, **match.model_dump())
     return new_match
+
+@router.get("/matches/{team_id}", response_model= list[schemas.MatchDB])
+async def get_team_matches(team_id: str):
+    return crud.get_match(team_id)
+
 
 @router.post("/matches/{match_id}/sets")
 async def create_set(match_id: str, match_set: schemas.MatchSet):
