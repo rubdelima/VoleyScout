@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from typing import List
 import app.schemas as schemas
-import app.crud as crud
+import app.controllers as crud
 
 router = APIRouter(tags=["players"])
 

@@ -77,3 +77,4 @@ class DBConnection:
             self.get_db_connection = None
 
 db = DBConnection()
+PARAM_PLACEHOLDER = db.param_placeholder

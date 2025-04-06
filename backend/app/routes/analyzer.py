@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 import app.schemas as schemas
-import app.crud as crud
+import app.controllers as crud
 
 router = APIRouter(tags=["auth"])
 

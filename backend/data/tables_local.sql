@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS Player (
     id TEXT PRIMARY KEY,                     -- Identificador único do jogador
     name TEXT NOT NULL,                      -- Nome do jogador
     nickname TEXT,                           -- Apelido (opcional)
-    position TEXT CHECK(position IN ('Levantador', 'Oposto', 'Ponteiro', 'Central', 'Líbero')),  -- Posição do jogador
+    position TEXT CHECK(position IN ('Levantador', 'Oposto', 'Ponteiro', 'Central', 'Libero')),  -- Posição do jogador
     number INTEGER NOT NULL,                 -- Número do jogador
     height INTEGER NOT NULL,                 -- Altura do jogador
     birthdate TEXT NOT NULL,                 -- Data de nascimento (armazenada em formato ISO)

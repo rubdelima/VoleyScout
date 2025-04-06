@@ -38,7 +38,7 @@ class PlayerBase(BaseModel):
     """
     name: str
     nickname: Optional[str] = None
-    position: Literal["Levantador", "Oposto", "Ponteiro", "Central", "Líbero"]
+    position: Literal["Levantador", "Oposto", "Ponteiro", "Central", "Libero"]
     number: int
     height: int
     birthdate: datetime

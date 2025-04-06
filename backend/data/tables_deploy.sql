@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS Player (
     id UUID PRIMARY KEY,
     name TEXT NOT NULL,
     nickname TEXT,
-    position TEXT CHECK(position IN ('Levantador', 'Oposto', 'Ponteiro', 'Central', 'Líbero')),
+    position TEXT CHECK(position IN ('Levantador', 'Oposto', 'Ponteiro', 'Central', 'Libero')),
     number INTEGER NOT NULL,
     height INTEGER NOT NULL,
     birthdate DATE NOT NULL,
