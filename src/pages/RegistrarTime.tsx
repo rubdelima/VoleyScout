@@ -20,7 +20,7 @@ function RegistrarTime() {
     setSuccess('');
 
     try {
-      const response = await fetch('http://127.0.0.1:8000/teams', {
+      const response = await fetch('https://scoutai.onthewifi.com/teams', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

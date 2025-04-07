@@ -21,7 +21,7 @@ function Login() {
 		setSuccess('');
 
 		try {
-			const response = await fetch('http://127.0.0.1:8000/login', {
+			const response = await fetch('https://scoutai.onthewifi.com/login', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json'
@@ -43,7 +43,7 @@ function Login() {
 
 			// opcional: tentar carregar o time se existir
 			try {
-				const teamRes = await fetch(`http://127.0.0.1:8000/teams/analyzer/${result.id}`);
+				const teamRes = await fetch(`https://scoutai.onthewifi.com/teams/analyzer/${result.id}`);
 				if (teamRes.ok) {
 					const team = await teamRes.json();
 					setTeam(team);

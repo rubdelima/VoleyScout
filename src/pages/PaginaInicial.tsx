@@ -19,7 +19,7 @@ function PaginaInicial(props: PaginaInicialProps) {
       try {
         if (!team?.id) return;  // Certifica-se de que o team está disponível no contexto
 
-        const response = await fetch(`http://127.0.0.1:8000/teams/${team.id}`);
+        const response = await fetch(`https://scoutai.onthewifi.com/teams/${team.id}`);
         if (!response.ok) {
           throw new Error("Erro ao buscar o time");
         }

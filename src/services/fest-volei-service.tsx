@@ -2,7 +2,7 @@ import axios from 'axios';
 import { Jogador } from '../constants/Jogador';
 
 const api = axios.create({
-    baseURL: 'http://localhost:8000/',
+    baseURL: 'https://scoutai.onthewifi.com/',
     headers: {
         'Content-Type': 'application/json',
     },
