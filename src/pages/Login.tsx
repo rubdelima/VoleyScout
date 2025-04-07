@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import volleyballImg from '../assets/login_volei.png';
 import scoutAiLogo from '../assets/ScoutAí.png';
+import BACKEND_URL from '../constants/Url';
 
 function Login() {
 	const [formData, setFormData] = useState({ nickname: '', password: '' });
@@ -21,7 +22,7 @@ function Login() {
 		setSuccess('');
 
 		try {
-			const response = await fetch('https://scoutai.onthewifi.com/login', {
+			const response = await fetch(`${BACKEND_URL}login`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json'
@@ -43,7 +44,7 @@ function Login() {
 
 			// opcional: tentar carregar o time se existir
 			try {
-				const teamRes = await fetch(`https://scoutai.onthewifi.com/teams/analyzer/${result.id}`);
+				const teamRes = await fetch(`${BACKEND_URL}teams/analyzer/${result.id}`);
 				if (teamRes.ok) {
 					const team = await teamRes.json();
 					setTeam(team);

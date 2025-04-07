@@ -1,8 +1,9 @@
 import axios from 'axios';
 import { Jogador } from '../constants/Jogador';
+import BACKEND_URL from '../constants/Url';
 
 const api = axios.create({
-    baseURL: 'https://scoutai.onthewifi.com/',
+    baseURL: BACKEND_URL,
     headers: {
         'Content-Type': 'application/json',
     },

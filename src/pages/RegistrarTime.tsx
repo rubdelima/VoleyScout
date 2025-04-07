@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import volleyballImg from '../assets/login_volei.png';
+import BACKEND_URL from '../constants/Url';
 
 function RegistrarTime() {
   const [formData, setFormData] = useState({ name: '', abbreviation: '' });
@@ -20,7 +21,7 @@ function RegistrarTime() {
     setSuccess('');
 
     try {
-      const response = await fetch('https://scoutai.onthewifi.com/teams', {
+      const response = await fetch(`${BACKEND_URL}teams`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

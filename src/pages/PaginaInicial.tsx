@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { Player } from "../../src/components/table_jogadores";
 import { Partida } from "../components/table_partidas";
 import { useAuth } from "../context/AuthContext";
+import BACKEND_URL from "../constants/Url";
 
 function PaginaInicial(props: PaginaInicialProps) {
   const { sigla, pais } = props;
@@ -19,7 +20,7 @@ function PaginaInicial(props: PaginaInicialProps) {
       try {
         if (!team?.id) return;  // Certifica-se de que o team está disponível no contexto
 
-        const response = await fetch(`https://scoutai.onthewifi.com/teams/${team.id}`);
+        const response = await fetch(`${BACKEND_URL}teams/${team.id}`);
         if (!response.ok) {
           throw new Error("Erro ao buscar o time");
         }

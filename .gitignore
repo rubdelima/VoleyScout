@@ -36,3 +36,4 @@ backend/.volei
 /backend/data/volleyball.db
 
 *.env
+.vercel

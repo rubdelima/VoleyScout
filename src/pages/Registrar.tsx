@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import volleyballImg from '../assets/login_volei.png';
 import scoutAiLogo from '../assets/ScoutAí.png';
+import BACKEND_URL from '../constants/Url';
 
 function Registrar() {
 	const [formData, setFormData] = useState({
@@ -28,7 +29,7 @@ function Registrar() {
 		}
 
 		try {
-			const response = await fetch('https://scoutai.onthewifi.com/sign_up', {
+			const response = await fetch(`${BACKEND_URL}sign_up`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json'
