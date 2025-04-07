@@ -2,6 +2,7 @@ from app.db import db, PARAM_PLACEHOLDER
 import uuid
 import app.schemas as schemas
 from typing import List
+from fastapi import HTTPException
 
 
 def add_team(team: schemas.TeamBase) -> str:
@@ -33,23 +34,21 @@ def add_team(team: schemas.TeamBase) -> str:
     conn.close()
     return team_id
 
-def get_teams()-> List[schemas.TeamDB]:
-    """
-    Busca todos os times do Banco de Dados
-
-    Parâmetros:
-        Não possui parâmetros
-
-    Retorna:
-        Todos os times no Banco de Dados
-    """
+def get_teams(search: str = "") -> list[schemas.TeamDB]:
     conn, cursor = db.get_db_connection()
-    query = "SELECT id, name, abbreviation FROM Team"
-    cursor.execute(query)
+
+    if search:
+        query = "SELECT id, name, abbreviation FROM Team WHERE name LIKE ?"
+        cursor.execute(query, (f"%{search}%",))
+    else:
+        query = "SELECT id, name, abbreviation FROM Team"
+        cursor.execute(query)
+
     teams = cursor.fetchall()
     conn.close()
-    teams_db = [schemas.TeamDB(id=row[0], name=row[1], abbreviation=row[2]) for row in teams]
-    return teams_db
+
+    return [schemas.TeamDB(id=row[0], name=row[1], abbreviation=row[2]) for row in teams]
+
 
 def get_team(team_id: str) -> schemas.TeamDB:
     """
@@ -133,7 +132,7 @@ def get_team_matches(team_id: str) -> List[schemas.MatchResponse]:
         match_ids = tuple(m[0] for m in matches)
         
         if match_ids:
-            placeholders = ", ".join([PARAM_PLACEHOLDER] * 26)
+            placeholders = ", ".join([PARAM_PLACEHOLDER] * len(match_ids))
             query = f"""
                 SELECT matchId, team1, team1Points, team2, team2Points 
                 FROM MatchSet 
@@ -163,6 +162,18 @@ def get_team_matches(team_id: str) -> List[schemas.MatchResponse]:
             adversary_sets = n_sets - team_sets
             win = team_sets > adversary_sets
             
+            # 👇 Adiciona esta parte aqui!
+            sets_models = [
+                schemas.MatchSet(
+                    matchId=s[0],
+                    team1=s[1],
+                    team1Points=s[2],
+                    team2=s[3],
+                    team2Points=s[4],
+                    setNumber=i+1  # ou use s[5] se estiver no banco
+                )
+                for i, s in enumerate(sets)
+            ]
             # Buscar jogadores analisados
             query = f"SELECT COUNT(DISTINCT playerId) FROM SetReport WHERE matchId = {PARAM_PLACEHOLDER}"
             cursor.execute(query, (match_id,))
@@ -178,10 +189,23 @@ def get_team_matches(team_id: str) -> List[schemas.MatchResponse]:
             cursor.execute(query, (match_id,))
             analyzers = [row[0] for row in cursor.fetchall()]
             
+
+            # 👇 Aqui você finalmente cria a resposta com o campo `sets`
             matches_responses.append(schemas.MatchResponse(
-                id=match_id, team1Id=team1_id, team2Id=team2_id, matchTime=match_time, isTournament=isTournament,
-                team=team_name, adversary=adversary_name, nSets=n_sets, teamSets=team_sets, adversarySets=adversary_sets,
-                win=win, analyzedPlayers=analyzed_players, analyzers=analyzers
+                id=match_id,
+                team1Id=team1_id,
+                team2Id=team2_id,
+                matchTime=match_time,
+                isTournament=isTournament,
+                sets=sets_models,  # <-- ESSA LINHA AQUI resolve o erro
+                team=team_name,
+                adversary=adversary_name,
+                nSets=n_sets,
+                teamSets=team_sets,
+                adversarySets=adversary_sets,
+                win=win,
+                analyzedPlayers=analyzed_players,
+                analyzers=analyzers
             ))
         
         return matches_responses
@@ -191,3 +215,4 @@ def get_team_matches(team_id: str) -> List[schemas.MatchResponse]:
     finally:
         conn.close()
     
+

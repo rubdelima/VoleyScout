@@ -2,23 +2,18 @@ from fastapi import APIRouter, HTTPException
 from typing import List
 import app.schemas as schemas
 import app.controllers as crud
+from app.schemas import MatchBase, MatchDB 
+
 
 router = APIRouter(tags=["matches"])
 
-@router.post("/matches", response_model=schemas.MatchDB)
-async def create_match(match: schemas.MatchBase):
+@router.post("/matches", response_model=MatchDB)
+async def create_match_with_sets(match: MatchBase):
     """
-    Endpoint para criar uma nova partida.
-
-    Parâmetros:
-        match: Objeto MatchBase com os dados da partida.
-
-    Retorna:
-        O objeto MatchDB com o ID gerado.
+    Cria uma partida com sets já incluídos.
     """
     match_id = crud.add_match(match)
-    new_match = schemas.MatchDB(id=match_id, **match.model_dump())
-    return new_match
+    return MatchDB(id=match_id, **match.dict())
 
 @router.get("/matches/{team_id}", response_model= list[schemas.MatchDB], tags=["matches", "teams"])
 async def get_team_matches(team_id: str):

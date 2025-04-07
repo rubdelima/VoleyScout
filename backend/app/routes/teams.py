@@ -53,3 +53,7 @@ async def home(team_id: str):
         players=players,
         matches=matches
     )
+
+@router.get("/teams", response_model=List[schemas.TeamDB])
+async def get_teams(search: str = ""):
+    return crud.get_teams(search)

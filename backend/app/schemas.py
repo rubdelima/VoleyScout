@@ -82,13 +82,12 @@ class MatchSet(BaseModel):
 # ------------------------------------------------------------------------------
 
 class MatchBase(BaseModel):
-    """
-    Base schema for a match.
-    """
     team1Id: str
     team2Id: str
     matchTime: datetime
-    isTournament: bool = False  # Corrected spelling from "isTourneament"
+    isTournament: bool = False
+    sets: List[MatchSet]  # <-- adiciona isso
+
 
 class MatchDB(MatchBase):
     """
