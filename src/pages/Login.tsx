@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext'; // caminho do contexto
+import { useAuth } from '../context/AuthContext';
 import volleyballImg from '../assets/login_volei.png';
 import scoutAiLogo from '../assets/ScoutAí.png';
 
@@ -9,7 +9,7 @@ function Login() {
 	const [error, setError] = useState('');
 	const [success, setSuccess] = useState('');
 	const navigate = useNavigate();
-	const { login } = useAuth();
+	const { login, setTeam } = useAuth(); // also allows setting team
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -40,7 +40,19 @@ function Login() {
 			const result = await response.json();
 			login(result); // salva no contexto global
 			setSuccess(`Bem-vindo(a), ${result.name}`);
-			navigate('/registrar-time'); // redireciona
+
+			// opcional: tentar carregar o time se existir
+			try {
+				const teamRes = await fetch(`http://127.0.0.1:8000/teams/analyzer/${result.id}`);
+				if (teamRes.ok) {
+					const team = await teamRes.json();
+					setTeam(team);
+				}
+			} catch {
+				// não faz nada se não tiver time — login continua normalmente
+			}
+
+			navigate('/pagina-inicial'); // página inicial padrão
 		} catch (err) {
 			if (err instanceof Error) {
 				setError(err.message);
