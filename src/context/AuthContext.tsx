@@ -17,8 +17,8 @@ interface Team {
 interface AuthContextType {
 	user: User | null;
 	setUser: (user: User | null) => void;
-	teams: Team[];
-	setTeams: (teams: Team[]) => void;
+	team: Team | null; // Permite que o time seja null inicialmente
+	setTeam: (team: Team | null) => void; // Permite setar null ou Team
 	login: (user: User) => void;
 }
 
@@ -26,14 +26,14 @@ const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
 	const [user, setUser] = useState<User | null>(null);
-	const [teams, setTeams] = useState<Team[]>([]);
+	const [team, setTeam] = useState<Team | null>(null); // O estado de team agora permite null
 
 	const login = (user: User) => {
 		setUser(user);
 	};
 
 	return (
-		<AuthContext.Provider value={{ user, setUser, teams, setTeams, login }}>
+		<AuthContext.Provider value={{ user, setUser, team, setTeam, login }}>
 			{children}
 		</AuthContext.Provider>
 	);

@@ -40,7 +40,7 @@ function Login() {
 			const result = await response.json();
 			login(result); // salva no contexto global
 			setSuccess(`Bem-vindo(a), ${result.name}`);
-			navigate('/'); // redireciona
+			navigate('/registrar-time'); // redireciona
 		} catch (err) {
 			if (err instanceof Error) {
 				setError(err.message);

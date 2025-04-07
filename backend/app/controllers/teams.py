@@ -1,3 +1,4 @@
+from fastapi import HTTPException
 from app.db import db, PARAM_PLACEHOLDER
 import uuid
 import app.schemas as schemas
