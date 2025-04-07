@@ -38,7 +38,7 @@ function RegistrarTime() {
 
       // Adiciona o time ao contexto usando setTeam
       setTeam(result);
-	  navigate('/'); // redireciona
+	  navigate('/pagina-inicial'); // redireciona
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message);

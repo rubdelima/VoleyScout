@@ -52,7 +52,7 @@ function Login() {
 				// não faz nada se não tiver time — login continua normalmente
 			}
 
-			navigate('/pagina-inicial'); // página inicial padrão
+			navigate('/registrar-time');
 		} catch (err) {
 			if (err instanceof Error) {
 				setError(err.message);
