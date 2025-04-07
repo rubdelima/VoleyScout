@@ -3,7 +3,7 @@ from app.db import db, PARAM_PLACEHOLDER
 import uuid
 import app.schemas as schemas
 from typing import List
-
+import traceback
 
 def add_team(team: schemas.TeamBase) -> str:
     """
@@ -134,7 +134,7 @@ def get_team_matches(team_id: str) -> List[schemas.MatchResponse]:
         match_ids = tuple(m[0] for m in matches)
         
         if match_ids:
-            placeholders = ", ".join([PARAM_PLACEHOLDER] * 26)
+            placeholders = ", ".join([PARAM_PLACEHOLDER] * len(match_ids))
             query = f"""
                 SELECT matchId, team1, team1Points, team2, team2Points 
                 FROM MatchSet 
@@ -188,6 +188,7 @@ def get_team_matches(team_id: str) -> List[schemas.MatchResponse]:
         return matches_responses
     except Exception as e:
         print(f"Erro ao buscar partidas: {e}")
+        traceback.print_exc()
         return []
     finally:
         conn.close()
