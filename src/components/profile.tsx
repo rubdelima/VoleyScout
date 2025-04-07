@@ -1,12 +1,17 @@
 import IconButton from "@mui/material/IconButton";
 import profile from "../assets/profile.svg";
 
-function Profile() {
+interface ProfileProps {
+  userName?: string;
+}
+
+function Profile({ userName }: ProfileProps) {
 	return (
-		<div>
+		<div className="flex items-center gap-2 text-white">
 			<IconButton>
-				<img src={profile} alt="" />
+				<img src={profile} alt="Perfil" />
 			</IconButton>
+			{userName && <span className="text-sm">{userName}</span>}
 		</div>
 	);
 }
