@@ -6,10 +6,10 @@ import traceback
 
 load_dotenv()
 
-base_dir = os.path.join(os.getcwd(), "backend")
-TABLES_LOCAL = os.path.join(base_dir, "data", "tables_local.sql")
-TABLES_DEPLOY = os.path.join(base_dir, "data", "tables_deploy.sql")
-DB_NAME = os.path.join(base_dir, "data", "volleyball.db")
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+TABLES_LOCAL = os.path.join(BASE_DIR, "data", "tables_local.sql")
+TABLES_DEPLOY = os.path.join(BASE_DIR, "data", "tables_deploy.sql")
+DB_NAME = os.path.join(BASE_DIR, "data", "volleyball.db")
 DATABASE_URL = os.getenv("DATABASE_URL")
 DATABASE_TYPE = os.getenv("DATABASE_TYPE")
 

@@ -5,7 +5,9 @@ Este arquivo inicializa o servidor e inclui as rotas definidas no módulo `route
 """
 import sys
 import os
-sys.path.append(os.path.join(os.getcwd(), 'backend'))
+
+# Ajusta o diretório de trabalho para 'backend' se não estiver já nele
+
 from fastapi import FastAPI
 import app.routes as routes
 from fastapi.middleware.cors import CORSMiddleware
